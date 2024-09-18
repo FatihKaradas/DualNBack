@@ -1,32 +1,29 @@
 package com.example.dualnback
 
-import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.Spinner
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.dualnback.databinding.ActivityMainBinding
-import java.util.Random
 
+ class MainActivity : AppCompatActivity() {
 
-abstract class MainActivity : AppCompatActivity() {
-
-    private var stepcount = 0
-    private val imageViewList = mutableListOf<ImageView>()
+    private lateinit var tw : TextView
     private lateinit var binding: ActivityMainBinding
-    private lateinit var spinner: Spinner
+    private lateinit var myspinner: Spinner
     private lateinit var spinnerAdapter : ArrayAdapter<String>
-    private var sayi:Int = 0
-    private lateinit var container : RelativeLayout
+    private var sayi:Int = 2
+    private lateinit var spinnerGameStep : Spinner
+    private lateinit var gameStepAdapter : ArrayAdapter<Int>
+    private var gameStep : Int = 10
+    private lateinit var spinnerNback : Spinner
+    private lateinit var nBackAdapter : ArrayAdapter<Int>
+    private var n : Int = 2
     private lateinit var startbuton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,13 +32,17 @@ abstract class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         startbuton = findViewById(R.id.StartButton)
-        container = findViewById(R.id.container)
-        spinner = findViewById(R.id.mySpinner)
+        tw = findViewById(R.id.nasıloynanır)
+        tw.setOnClickListener{
+            startActivity(Intent(this,Oynanis::class.java))
+        }
+
+        myspinner = findViewById(R.id.mySpinner)
         val matris = arrayOf("(2x2)","(3x3)","(4x4)","(5x5)","(6x6)")
         spinnerAdapter = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,matris)
-        spinner.adapter = spinnerAdapter
+        myspinner.adapter = spinnerAdapter
 
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        myspinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected( parent: AdapterView<*>?, view: View?, index: Int, id: Long) {
                 sayi = when(matris[index]){
                     "(2x2)" -> 2
@@ -51,16 +52,47 @@ abstract class MainActivity : AppCompatActivity() {
                     "(6x6)" -> 6
                     else ->2
                 }
-                createMatris(sayi)
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
+        spinnerGameStep = findViewById(R.id.spinnergameStep)
+        val gamestepnumber = arrayOf(10,11,12,13,14,15,16,17,18,19,20)
+        gameStepAdapter = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,gamestepnumber)
+        spinnerGameStep.adapter = gameStepAdapter
+
+        spinnerGameStep.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                gameStep = gamestepnumber[position]
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        spinnerNback = findViewById(R.id.spinnerNago)
+        val nBackNumber = arrayOf(2,3,4,5)
+        nBackAdapter = ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,nBackNumber)
+        spinnerNback.adapter = nBackAdapter
+
+        spinnerNback.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long ) {
+                n = nBackNumber[position]
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+
         startbuton.setOnClickListener{
-            randomSelect()
+            val intent = Intent(this,DualNBackActivity::class.java)
+            intent.putExtra("matris",sayi)
+            intent.putExtra("gamestep",gameStep)
+            intent.putExtra("nback",n)
+            startActivity(intent)
         }
     }
-    private fun createMatris(size: Int) {
+   /* private fun createMatris(size: Int) {
         container.removeAllViews() // Mevcut tüm görüntüleri temizle
         imageViewList.clear() // ImageView listemizi temizle
 
@@ -92,48 +124,45 @@ abstract class MainActivity : AppCompatActivity() {
                 imageViewList.add(imageView)
             }
         }
-        println(imageViewList)
     }
-    private var correctcount = 0
-    private var n:Int = 2
-    private val randomNumbersList = mutableListOf<Int>()
-    private var nStepsAgoNumber: Int? = null
-    private val nStepAgoNumberList = mutableListOf<Int>()
+     private val randomNumberList = mutableListOf<Int>()
+     private var nStepsAgoNumber: Int? = null
+     private val nStepAgoNumberList = mutableListOf<Int>()
     @SuppressLint("ResourceType")
     private fun randomSelect() {
         val random = Random() // Random nesnesi oluştur, seed kullanmadan
         if (stepcount<10) {
+
             val randomNumber = random.nextInt(sayi * sayi)
-            randomNumbersList.add(randomNumber)// 0 ile sayi*sayi arasında rastgele bir sayı seç
+            randomNumberList.add(randomNumber)
+
             val selectedimageview = imageViewList[randomNumber]
             selectedimageview.setImageResource(R.drawable.square2)
+
             if (stepcount>=n){
-                nStepsAgoNumber = randomNumbersList[stepcount - n]
+                nStepsAgoNumber = randomNumberList[stepcount-n]
                 nStepAgoNumberList.add(nStepsAgoNumber!!)
             }
-            val selectednstepagoImageView=imageViewList[nStepsAgoNumber!!]
-            selectednstepagoImageView.setOnClickListener{
-                correctcount+1
-                selectednstepagoImageView.isClickable = false
-            }
+
             Handler(Looper.getMainLooper()).postDelayed({
                 selectedimageview.setImageResource(R.drawable.square)
+
                 Handler(Looper.getMainLooper()).postDelayed({
-                    selectednstepagoImageView.isClickable = true
                     stepcount++
                     randomSelect()
                 }, 250)
-            }, 1250)
+
+            }, 1500)
         }
         else{
-            Log.d("RandomNumbers", randomNumbersList.joinToString(", "))
-            Log.d("TwoStepAgoNumbers", nStepAgoNumberList.joinToString(", "))
-            Toast.makeText(applicationContext,"Doğru Eşleştirme: ${correctcount}",Toast.LENGTH_SHORT).show()
             stepcount = 0
-            correctcount = 0
-            randomNumbersList.clear()
+            Log.e("Random Sayı:",randomNumberList.toString())
+            Log.e("N step ago number:",nStepAgoNumberList.toString())
+            randomNumberList.clear()
             nStepAgoNumberList.clear()
         }
-    }
+    }*/
+
+
 
 }
