@@ -1,8 +1,8 @@
-  Dual N-Back Game
+  **Dual N-Back Game**
   
   This project is a brain exercise game called Dual N-Back. The game aims to improve the user's short-term memory. The player must follow the visual stimuli shown in sequence and correctly predict the position of the visual element shown "N" steps before.
 
-How to Play?
+  **How to Play?**
 
 -The player is shown a visual position on a grid in each round.
 
@@ -12,7 +12,7 @@ How to Play?
 
 -The game is designed to improve the player's recall capacity and strengthen short-term memory.
 
-Technologies Used
+  **Technologies Used**
 
 The following technologies and tools were used in this project:
 
@@ -32,19 +32,19 @@ The following technologies and tools were used in this project:
 
 -Spinner and Adapter: Used to select the game's difficulty level, step count, and grid size.
 
-Main Screen
+**Main Screen**
 
 ![ana ekrandual](https://github.com/user-attachments/assets/673d50dc-7396-416f-a5b9-2ea7c08c012f)
 
-Gameplay guide
+**Gameplay guide**
 
 ![dual startguide](https://github.com/user-attachments/assets/ab39d38d-3049-413d-a670-b4cf990d9201)
 
-Game Screen
+**Game Screen**
 
 ![dualoyuniçi](https://github.com/user-attachments/assets/0e74fb46-d3d5-4f47-825b-85ca0b40bc33)
 
-Contributing
+  **Contributing**
 
 If you would like to contribute to the project, please submit a pull request. We welcome any feedback and suggestions.
 
@@ -58,6 +58,6 @@ If you would like to contribute to the project, please submit a pull request. We
 
 -Open a pull request.
 
-License
+  **License**
 
 This project is licensed under the MIT License. For more information, see the LICENSE file.
